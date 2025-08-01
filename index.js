@@ -1,7 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const http= require("http");
-const socketIo= require("socket.io");
 const cors= require("cors");
 const compression= require("compression");
 const ratelimiter= require("express-rate-limit");
@@ -9,8 +8,8 @@ const slowDown= require("express-slow-down");
 const winston= require("winston");
 const helmet= require("helmet");
 const connectDB = require("./database/MongoDB");
-const winston= require('winston')
 const expressWinston= require('express-winston');
+const SocketManager = require("./database/socket");
 
 dotenv.config();
 
@@ -68,11 +67,4 @@ app.get("/health", (req,res)=>{
 // Api Routes are defined as the 
 
 
-
-// Socket setup 
-io.on("connection", (socket)=>{
-    socket.on('disconnect', ()=>{
-        console.log("Socket Disconnected");
-    })
-})
-
+const socketManager= new SocketManager(server);
