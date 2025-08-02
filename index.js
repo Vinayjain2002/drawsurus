@@ -11,6 +11,7 @@ const connectDB= require("./database/MongoDB");
 const SocketManager = require("./database/socket");
 
 const adminRoutes= require("./routes/admin");
+const authRoutes= require("./routes/auth");
 
 dotenv.config();
 
@@ -48,6 +49,8 @@ app.use(speedLimiter);
 
 
 app.use("/admin", adminRoutes);
+app.use("/auth", authRoutes);
+
 app.get("/health", (req,res)=>{
     res.status(200).json({status: "ok"});
 });

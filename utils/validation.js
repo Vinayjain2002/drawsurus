@@ -1,69 +1,69 @@
 const { body, param, query, validationResult } = require('express-validator');
-// const Joi = require('joi');
+const Joi = require('joi');
 
-// // Joi validation schemas
-// const validateRegistration = (data) => {
-//   const schema = Joi.object({
-//     userName: Joi.string()
-//       .min(3)
-//       .max(30)
-//       .pattern(/^[a-zA-Z0-9_]+$/)
-//       .required()
-//       .messages({
-//         'string.min': 'Username must be at least 3 characters',
-//         'string.max': 'Username cannot exceed 30 characters',
-//         'string.pattern.base': 'Username can only contain letters, numbers, and underscores',
-//         'any.required': 'Username is required'
-//       }),
-//     email: Joi.string()
-//       .email()
-//       .required()
-//       .messages({
-//         'string.email': 'Please enter a valid email',
-//         'any.required': 'Email is required'
-//       }),
-//     password: Joi.string()
-//       .min(6)
-//       .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-//       .required()
-//       .messages({
-//         'string.min': 'Password must be at least 6 characters',
-//         'string.pattern.base': 'Password must contain at least one lowercase letter, one uppercase letter, and one number',
-//         'any.required': 'Password is required'
-//       }),
-//     enterpriseTag: Joi.string()
-//       .min(2)
-//       .max(50)
-//       .pattern(/^[a-zA-Z0-9_-]+$/)
-//       .optional()
-//       .messages({
-//         'string.min': 'Enterprise tag must be at least 2 characters',
-//         'string.max': 'Enterprise tag cannot exceed 50 characters',
-//         'string.pattern.base': 'Enterprise tag can only contain letters, numbers, hyphens, and underscores'
-//       })
-//   });
+// Joi validation schemas
+const validateRegistration = (data) => {
+  const schema = Joi.object({
+    userName: Joi.string()
+      .min(3)
+      .max(30)
+      .pattern(/^[a-zA-Z0-9_]+$/)
+      .required()
+      .messages({
+        'string.min': 'Username must be at least 3 characters',
+        'string.max': 'Username cannot exceed 30 characters',
+        'string.pattern.base': 'Username can only contain letters, numbers, and underscores',
+        'any.required': 'Username is required'
+      }),
+    email: Joi.string()
+      .email()
+      .required()
+      .messages({
+        'string.email': 'Please enter a valid email',
+        'any.required': 'Email is required'
+      }),
+    password: Joi.string()
+      .min(6)
+      .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+      .required()
+      .messages({
+        'string.min': 'Password must be at least 6 characters',
+        'string.pattern.base': 'Password must contain at least one lowercase letter, one uppercase letter, and one number',
+        'any.required': 'Password is required'
+      }),
+    enterpriseTag: Joi.string()
+      .min(2)
+      .max(50)
+      .pattern(/^[a-zA-Z0-9_-]+$/)
+      .optional()
+      .messages({
+        'string.min': 'Enterprise tag must be at least 2 characters',
+        'string.max': 'Enterprise tag cannot exceed 50 characters',
+        'string.pattern.base': 'Enterprise tag can only contain letters, numbers, hyphens, and underscores'
+      })
+  });
 
-//   return schema.validate(data);
-// };
+  return schema.validate(data);
+};
 
-// const validateLogin = (data) => {
-//   const schema = Joi.object({
-//     email: Joi.string()
-//       .email()
-//       .required()
-//       .messages({
-//         'string.email': 'Please enter a valid email',
-//         'any.required': 'Email is required'
-//       }),
-//     password: Joi.string()
-//       .required()
-//       .messages({
-//         'any.required': 'Password is required'
-//       })
-//   });
+const validateLogin = (data) => {
+  const schema = Joi.object({
+    email: Joi.string()
+      .email()
+      .required()
+      .messages({
+        'string.email': 'Please enter a valid email',
+        'any.required': 'Email is required'
+      }),
+    password: Joi.string()
+      .required()
+      .messages({
+        'any.required': 'Password is required'
+      })
+  });
 
-//   return schema.validate(data);
-// };
+  return schema.validate(data);
+};
 
 // Common validation rules
 const commonValidations = {
