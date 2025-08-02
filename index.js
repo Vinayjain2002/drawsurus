@@ -7,8 +7,14 @@ const ratelimiter= require("express-rate-limit");
 const slowDown= require("express-slow-down");
 const winston= require("winston");
 const helmet= require("helmet");
-const connectDB = require("./database/MongoDB");
+const connectDB= require("./database/MongoDB");
 const SocketManager = require("./database/socket");
+const router= express.Router();
+const authRoutes= require("./auth.js");
+const userRoutes= require("./users.js");
+const  roomRoutes= require("./room.js");
+const gameRoutes= require("./game.js");
+const adminRoutes= require("./admin.js");
 
 dotenv.config();
 
@@ -44,13 +50,16 @@ app.use(speedLimiter);
 
 
 
-// defining a route for the health checkup
+// Import routes
+const routes = require('./routes');
+
+// Mount API routes
+app.use('/api', routes);
+
+// Health check route (kept for backward compatibility)
 app.get("/health", (req,res)=>{
     res.status(200).json({status: "ok"});
 });
-
-
-// Api Routes are defined as the 
 
 
 // Initialize Socket.IO

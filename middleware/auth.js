@@ -69,40 +69,6 @@ const authenticateToken = async (req, res, next) => {
   }
 };
 
-// Optional authentication middleware (doesn't fail if no token)
-const optionalAuth = async (req, res, next) => {
-  try {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (!token) {
-      return next();
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    const user = await User.findById(decoded.userId).select('-passwordHash');
-    if (!user) {
-      return next();
-    }
-
-    const session = await Session.findBySessionId(decoded.sessionId);
-    if (!session || !session.isValid()) {
-      return next();
-    }
-
-    await session.updateActivity();
-    
-    req.user = user;
-    req.session = session;
-    req.enterpriseTag = user.enterpriseTag;
-
-    next();
-  } catch (error) {
-    // Continue without authentication
-    next();
-  }
-};
 
 // Check if user is admin (you can customize this based on your needs)
 const requireAdmin = (req, res, next) => {
@@ -113,8 +79,6 @@ const requireAdmin = (req, res, next) => {
     });
   }
 
-  // Add your admin check logic here
-  // For example: if (req.user.role !== 'admin')
   if (!req.user.isAdmin) {
     return res.status(403).json({
       success: false,

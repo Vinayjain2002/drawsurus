@@ -31,6 +31,10 @@ const userSchema= new mongoose.Schema({
         type: String,   
         default: Date.now   
     },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
     lastOnline: {
         type: Date,
         default: Date.now
@@ -72,6 +76,31 @@ userSchema.virtual('password')
 userSchema.method.comparePassword= function(candidatePassword){
     return bcrypt.compareSync(candidatePassword, this.passwordHash);
 }
+userSchema.methods.onlineUsers= function(){
+    return  this.find({isOnline: true});
+}
+
+userSchema.statics.findTodayCurrentUser = function() {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);  // sets time to 00:00:00
+
+    return this.find({ lastOnline: { $gte: startOfDay } });
+}
+
+userSchema.statics.findTodayRegisteredUsers = function() {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);  // sets time to 00:00:00
+
+    return this.find({ createdAt: { $gte: startOfDay } });
+}
+
+userSchema.statics.findTodayOnlineUsers = function(){
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);  // sets time to 00:00:00
+
+    return this.find({ isOnline: true, lastOnline: { $gte: startOfDay } });
+}
+
 userSchema.methods.updateLastOnline = function() {
     this.lastOnline = new Date();
     return this.save();
@@ -82,7 +111,7 @@ userSchema.methods.updateLastOnline = function() {
   };
   
   userSchema.statics.findByUsername = function(username) {
-    return this.findOne({ username: username });
+    return this.findOne({ userName: username });
   };
   
   userSchema.index({ email: 1 });
