@@ -124,8 +124,6 @@ const authRateLimit = {
 
 module.exports = {
   authenticateToken,
-  optionalAuth,
   requireAdmin,
-  requireSameEnterprise,
-  authRateLimit
+  requireSameEnterprise
 }; 

@@ -1,22 +1,20 @@
-// const express = require('express');
-// const router = express.Router();
-// const adminController = require('../controllers/adminController');
-// const { authenticateToken, requireAdmin } = require('../middleware/auth');
+const express= require('express')
+const router= express.Router();
+const AdminController= require("../controllers/adminController");
+const {authenticateToken, requireAdmin}= require("../middleware/auth.js");
 
-// // All routes require authentication and admin privileges
-// router.use(authenticateToken);
-// router.use(requireAdmin);
+router.use(authenticateToken);
+router.use(requireAdmin);
 
-// // Dashboard statistics
-// router.get('/dashboard', adminController.getDashboardStats);
+router.get("/dashboard", AdminController.getDashboardStats);
+router.get("/users", AdminController.getUsers);
 
-// // User management
-// router.get('/users', adminController.getUsers);
-// router.get('/users/:userId', adminController.getUserDetails);
-// router.put('/users/:userId', adminController.updateUser);
-// router.delete('/users/:userId', adminController.deleteUser);
+router.get("/users/:userId", AdminController.getUserDetails);
+router.put("/users/:userId", AdminController.updateUser)
 
-// // Analytics
-// router.get('/analytics', adminController.getAnalytics);
+router.delete("/users/:userId", AdminController.deleteUser);
 
-// module.exports = router;
+// Getting analytics
+router.get("/analytics", AdminController.getAnalytics);
+
+module.exports = router;
