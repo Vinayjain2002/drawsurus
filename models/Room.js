@@ -75,7 +75,7 @@ const roomSchema = new mongoose.Schema({
     roundTime: {
       type: Number,
       default: 60, // seconds
-      min: [30, 'Minimum round time is 30 seconds'],
+      min: [10, 'Minimum round time is 10 seconds'],
       max: [120, 'Maximum round time is 120 seconds']
     },
     roundsPerGame: {

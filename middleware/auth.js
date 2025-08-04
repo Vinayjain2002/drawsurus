@@ -91,6 +91,7 @@ const requireAdmin = (req, res, next) => {
 
 // Check if user is in the same enterprise
 const requireSameEnterprise = (req, res, next) => {
+  console.log("middleware is called");
   if (!req.user) {
     return res.status(401).json({
       success: false,
@@ -99,13 +100,13 @@ const requireSameEnterprise = (req, res, next) => {
   }
 
   const targetEnterpriseTag = req.params.enterpriseTag || req.body.enterpriseTag;
-  
   if (targetEnterpriseTag && req.user.enterpriseTag !== targetEnterpriseTag) {
     return res.status(403).json({
-      success: false,
+      successs: false,
       message: 'Access denied: Different enterprise'
     });
   }
+  console.log("enterprise matches");
 
   next();
 };

@@ -7,17 +7,21 @@ class RoomController {
   // Create a new room
   async createRoom(req, res) {
     try {
+      console.log("Create room is called");
       const { maxPlayers, settings } = req.body;
       const { enterpriseTag } = req.user;
-
-      // Generate unique room code
+      console.log("the data are defined as the", maxPlayers, settings);
+      console.log("settings type:", typeof settings);
+      console.log("settings value:", JSON.stringify(settings, null, 2));
       let roomCode;
       let existingRoom;
       do {
         roomCode = Room.generateRoomCode();
         existingRoom = await Room.findByRoomCode(roomCode);
       } while (existingRoom);
-
+      console.log("Identified the room code as the ", roomCode);
+      console.log("the user id is defined as the", req.user._id);
+      console.log("the enterise tag is defined as the", enterpriseTag);
       // Create room
       const room = new Room({
         roomCode,
@@ -26,7 +30,7 @@ class RoomController {
         enterpriseTag,
         settings: settings || {}
       });
-
+      console.log("the room details are defined as the", room);
       // Add host as first player
       await room.addPlayer(req.user._id, req.user.userName, true);
       await room.save();
@@ -46,10 +50,11 @@ class RoomController {
       });
 
     } catch (error) {
-      winston.error('Create room error:', error);
+      // winston.error('Create room error:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to create room'
+        message: 'Failed to create room',
+        error: error
       });
     }
   }
@@ -59,7 +64,7 @@ class RoomController {
     try {
       const { roomCode } = req.params;
       const { enterpriseTag } = req.user;
-
+      console.log("the room code is defined as the", roomCode, enterpriseTag);
       const room = await Room.findByRoomCode(roomCode);
       if (!room) {
         return res.status(404).json({
@@ -123,7 +128,7 @@ class RoomController {
   async getRoom(req, res) {
     try {
       const { roomId } = req.params;
-
+      console.log("get room is called with the roomId is defined as the", roomId);
       const room = await Room.findById(roomId)
         .populate('hostId', 'userName avatar')
         .populate('players.userId', 'userName avatar')

@@ -3,7 +3,6 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const { authenticateToken, requireSameEnterprise } = require('../middleware/auth');
 
-// All routes require authentication
 router.use(authenticateToken);
 
 // Get user by ID

@@ -12,9 +12,9 @@ const SocketManager = require("./database/socket");
 
 const adminRoutes= require("./routes/admin");
 const authRoutes= require("./routes/auth");
-const gameRoutes= require("./routes/game")
+// const gameRoutes= require("./routes/game")
 const roomRoutes= require("./routes/room")
-const userRoutes= require("./routes/user")
+// const userRoutes= requirse("./routes/user")
 
 dotenv.config();
 
@@ -55,7 +55,7 @@ app.use(speedLimiter);
 app.use("/auth", authRoutes);
 // app.use("/user", userRoutes);
 // app.use("/game", gameRoutes);
-// app.use("/room", roomRoutes);
+app.use("/room", roomRoutes);
 app.get("/health", (req,res)=>{
     res.status(200).json({status: "ok"});
 });
