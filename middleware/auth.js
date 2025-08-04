@@ -28,20 +28,20 @@ const authenticateToken = async (req, res, next) => {
     }
 
     // Check if session is valid
-    const session = await Session.findBySessionId(decoded.sessionId);
-    if (!session || !session.isValid()) {
-      return res.status(401).json({
-        success: false,
-        message: 'Session expired or invalid'
-      });
-    }
+    // const session = await Session.findBySessionId(decoded.sessionId);
+    // if (!session || !session.isValid()) {
+    //   return res.status(401).json({
+    //     success: false,
+    //     message: 'Session expired or invalid'
+    //   });
+    // }
 
     // Update session activity
-    await session.updateActivity();
+    // await session.updateActivity();
 
     // Attach user and session to request
     req.user = user;
-    req.session = session;
+    // req.session = session;
     req.enterpriseTag = user.enterpriseTag;
 
     next();

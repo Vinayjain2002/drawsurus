@@ -73,7 +73,8 @@ userSchema.virtual('password')
     this.passwordHash = bcrypt.hashSync(password, 12);
   });
 
-userSchema.method.comparePassword= function(candidatePassword){
+userSchema.methods.comparePassword= function(candidatePassword){
+    console.log("passwords are defined as the", candidatePassword,this.passwordHash);
     return bcrypt.compareSync(candidatePassword, this.passwordHash);
 }
 userSchema.methods.onlineUsers= function(){

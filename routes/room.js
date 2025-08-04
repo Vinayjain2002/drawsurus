@@ -1,30 +1,30 @@
-// const express = require('express');
-// const router = express.Router();
-// const roomController = require('../controllers/roomController');
-// const { authenticateToken, requireSameEnterprise } = require('../middleware/auth');
+const express = require('express');
+const router = express.Router();
+const roomController = require('../controllers/roomController');
+const { authenticateToken, requireSameEnterprise } = require('../middleware/auth');
 
-// // All routes require authentication
-// router.use(authenticateToken);
+// All routes require authentication
+router.use(authenticateToken);
 
-// // Create new room
-// router.post('/', roomController.createRoom);
+// Create new room
+router.post('/', roomController.createRoom);
 
-// // Join room by code
-// router.post('/join/:roomCode', roomController.joinRoom);
+// Join room by code
+router.post('/join/:roomCode', roomController.joinRoom);
 
-// // Get room details
-// router.get('/:roomId', requireSameEnterprise, roomController.getRoom);
+// Get room details
+router.get('/:roomId', requireSameEnterprise, roomController.getRoom);
 
-// // Leave room
-// router.post('/:roomId/leave', requireSameEnterprise, roomController.leaveRoom);
+// Leave room
+router.post('/:roomId/leave', requireSameEnterprise, roomController.leaveRoom);
 
-// // Update room settings
-// router.put('/:roomId/settings', requireSameEnterprise, roomController.updateRoomSettings);
+// Update room settings
+router.put('/:roomId/settings', requireSameEnterprise, roomController.updateRoomSettings);
 
-// // Get active rooms for enterprise
-// router.get('/', roomController.getActiveRooms);
+// Get active rooms for enterprise
+router.get('/', roomController.getActiveRooms);
 
-// // Start game
-// router.post('/:roomId/start-game', requireSameEnterprise, roomController.startGame);
+// Start game
+router.post('/:roomId/start-game', requireSameEnterprise, roomController.startGame);
 
-// module.exports = router;
+module.exports = router;

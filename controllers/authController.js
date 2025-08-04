@@ -1,8 +1,11 @@
 const jwt= require("jsonwebtoken");
 const bcrypt= require("bcryptjs")
 const User= require("../models/User.js");
-const Session = require("../models/Session.js")
-const { validateRegistration } = require("../utils/validation");
+const Session = require("../models/Session")
+const { validateRegistration, validateLogin } = require("../utils/validation");
+const { v4: uuidv4 } = require('uuid');
+const dotenv=require("dotenv");
+dotenv.config();
 
 class AuthController{
     async register(req,res){
@@ -16,6 +19,7 @@ class AuthController{
             }
 
             const {userName, email, password, enterpriseTag}= req.body;
+            console.log(userName, email,password, enterpriseTag );
             const existingUser= await User.findOne({
                 $or: [{email: email}, {userName: userName}]
             });
@@ -33,15 +37,20 @@ class AuthController{
                 enterpriseTag: enterpriseTag || "defaault"                
             });
 
-            await user.save();
-            const session = new Session({
-                userId: user._id,
-                enterpriseTag: user.enterpriseTag
-              });
-              await session.save();
 
+            await user.save();
+            console.log("user registered Successfully");
+            console.log("user id is defined as the", user._id);
+            
+            // Generate session ID and set expiration
+            const sessionId = uuidv4();
+            const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
+            console.log("session data", sessionId, expiresAt);
+            
+              console.log("user session Data stored successfully");
+            
               const token = jwt.sign(
-                { userId: user._id, sessionId: session.sessionId },
+                { userId: user._id },
                 process.env.JWT_SECRET,
                 { expiresIn: '24h' }
               );
@@ -49,14 +58,14 @@ class AuthController{
               const userResponse= user.toObject();
               delete userResponse.passwordHash;
 
+
               // returning the response of the user back without the passwordHash
               return res.status(201).json({
                 success: true,
                 message:"User Registered Successfully",
                 data: {
                     user: userResponse,
-                    token,
-                    sessionId: session.sessionId
+                    token: token
                 }
               });
         }
@@ -67,39 +76,36 @@ class AuthController{
             });
         }
     }
+
         async login(req,res){
             try{
-                const {error}= validateRegistration(req.body);
+                const {error}= validateLogin(req.body);
                 if(error){
                     return res.status(400).json({
                         success: false,
                         message: error.details[0].message
                     });
                 }
+                console.log("User Login Creds Verified");
                 const {email,password}= req.body;
                 const user= await User.findOne({email});
-
+                console.log("email and password",email, password);
                 if(!user){
                     return res.status(401).json({"message": "Invalid Credentials"});
                 }
+                console.log("the token is defined as the", user._id);
                 const isValidPassword= user.comparePassword(password);
+                console.log("password validation", isValidPassword);
                 if(!isValidPassword){
                     return res.status(401).json({"success": false, message: "Invalid Credentials"});
                 }
-
-                const session= new Session({
-                    userId: user._id,
-                    enterpriseTag: user.enterpriseTag
-                });
-
-                await session.save();
-
                 //creating the user token
                 const token= jwt.sign(
-                    {userId: user._id, sessionId: session.sessionId},
+                    {userId: user._id},
                     process.env.JWT_SECRET,
                     {expiresIn: '24h'}
                 );
+                console.log("the token is defined as the", token);
 
                 const userResponse= user.toObject();
                 delete userResponse.passwordHash;
@@ -108,9 +114,7 @@ class AuthController{
                     message: "Login Successfully",
                     data: {
                         user: userResponse,
-                        token,
-                        sessionId: session.sessionId
-                    }
+                        token                    }
                 });
             }
             catch(err){
@@ -120,10 +124,11 @@ class AuthController{
         
         async logout(req,res){
             try{
-                const {sessionId}= req.session;
-                await Session.invalidateSession(sessionId);
+                // const {sessionId}= req.session;
+                // await Session.invalidateSession(sessionId);
 
                 if(req.user){
+                    console.log("Loging out user");
                     req.user.isOnline= false;
                     req.user.lastOnline= new Date();
                     await req.user.save();
@@ -136,31 +141,30 @@ class AuthController{
             
             }
             catch(err){
-                return res.status(500).json({"message": "Logout Successful", success: false});
+                return res.status(500).json({"message": "Error Logging out user", success: false, err: err});
             }
         }
 
         async refreshToken(req,res){
             try{
-                const {sessionId}= req.session;
-                if(!sessionId){
-                    return res.status(401).json({"message": "Session Id is not Identified"});
-                }
+                // const {sessionId}= req.session;
+                // if(!sessionId){
+                //     return res.status(401).json({"message": "Session Id is not Identified"});
+                // }
 
-                const session= await Session.findBySessionId(sessionId);
-                if(!session || !session.isValid()){
-                    return res.status(401).json({"message": "Session expired", success: false});
-                }
-                await session.updateActivity();
+                // const session= await Session.findBySessionId(sessionId);
+                // if(!session || !session.isValid()){
+                //     return res.status(401).json({"message": "Session expired", success: false});
+                // }
+                // await session.updateActivity();
                 const token= jwt.sign(
-                    {userId: req.user._id, sessionId: session.sessionId},
+                    {userId: req.user._id},
                     process.env.JWT_SECRET,
                     {expiresIn: '24h'}
                 );
 
                 return res.status(200).json({success: true, message: "Token Refreshed Successfully", data: {
-                    token,
-                    sessionId: session.sessionId
+                    token
                 }});
             }
             catch(err){

@@ -8,7 +8,7 @@ const sessionSchema = new mongoose.Schema({
   },
   sessionId: {
     type: String,
-    required: [true, 'Session ID is required'],
+    // required: [true, 'Session ID is required'],
     unique: true
   },
   ip: {
@@ -30,7 +30,7 @@ const sessionSchema = new mongoose.Schema({
   },
   expiresAt: {
     type: Date,
-    required: [true, 'Expiration date is required']
+    // required: [true, 'Expiration date is required']
   },
   lastActivity: {
     type: Date,
