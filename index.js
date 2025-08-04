@@ -51,7 +51,7 @@ app.use(speedLimiter);
 
 
 
-// app.use("/admin", adminRoutes);
+app.use("/admin", adminRoutes);
 app.use("/auth", authRoutes);
 // app.use("/user", userRoutes);
 // app.use("/game", gameRoutes);

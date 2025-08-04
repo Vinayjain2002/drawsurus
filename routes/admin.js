@@ -7,7 +7,7 @@ router.use(authenticateToken);
 router.use(requireAdmin);
 
 router.get("/dashboard", AdminController.getDashboardStats);
-router.get("/users", AdminController.getUsers);
+// router.get("/users", AdminController.getUsers);
 
 router.get("/users/:userId", AdminController.getUserDetails);
 router.put("/users/:userId", AdminController.updateUser)
@@ -15,6 +15,6 @@ router.put("/users/:userId", AdminController.updateUser)
 router.delete("/users/:userId", AdminController.deleteUser);
 
 // Getting analytics
-router.get("/analytics", AdminController.getAnalytics);
+// router.get("/analytics", AdminController.getAnalytics);
 
 module.exports = router;

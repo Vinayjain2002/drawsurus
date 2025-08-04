@@ -167,6 +167,7 @@ class RoomController {
   async leaveRoom(req, res) {
     try {
       const { roomId } = req.params;
+      console.log("the room Id is defined as the", roomId);
 
       const room = await Room.findById(roomId);
       if (!room) {
@@ -293,7 +294,10 @@ class RoomController {
       }
 
       // Check if room has enough players
+      console.log(room.players);
+      console.log("the no of the players are defined as the", room.players.length);
       if (room.players.length < 2) {
+
         return res.status(400).json({
           success: false,
           message: 'Need at least 2 players to start'

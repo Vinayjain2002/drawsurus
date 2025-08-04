@@ -8,16 +8,22 @@ class AdminController{
     static async getDashboardStats(req,res){
         try{
             const {enterpriseTag}= req.user;
-            
+            console.log(enterpriseTag);
+
             // get the today statics
             const todayUsers= await User.findTodayRegisteredUsers();
+            console.log("today users are", todayUsers);
             const todayOnlineUsers= await User.findTodayOnlineUsers();
+            console.log("today online users are defined as the", todayOnlineUsers);
             const todayCurrentUsers= await User.findTodayCurrentUser();
+            console.log("current users are", todayCurrentUsers);
 
             const activeRooms= await Room.findActiveByEnterprise(enterpriseTag);
-            const recentGames= await Game.findCompletedByEnterprise(enterpriseTag, 10);
+            console.log("active users are defined as the", activeRooms);
 
-            // Top players
+            // const recentGames= await Game.findCompletedByEnterprise(enterpriseTag, 10);
+            // console.log("recent games are defined as the", recentGames);
+
             const topPlayers= await UserStats.find().populate('userId', 'userName avatar').sort({totalScore: 1}).limit(10);
             const stats= {
                 today: {
@@ -28,9 +34,9 @@ class AdminController{
                 rooms: {
                     active: activeRooms.length
                 },
-                games: {
-                    recent: recentGames.length
-                },
+                // games: {
+                //     recent: recentGames.length
+                // },
                 players: {
                     top: topPlayers
                 }
@@ -42,6 +48,8 @@ class AdminController{
             });
         }
         catch(err){
+          console.log("error is defined as the", err);
+
             return res.status(500).json({
                 success: false,
                 message: "Failed to get Dashboard Statistics"
@@ -52,6 +60,7 @@ class AdminController{
     static async getUsers(req,res){
         try{
             const {enterpriseTag}= req.body;
+            console.log("enterprise tag is defined as the", enterpriseTag);
             const {page= 1, limit=20, search}= req.query;
 
             const query= {enterpriseTag};
@@ -61,7 +70,9 @@ class AdminController{
                     {email: {$regex: search, $options: 'i'}}
                 ];
             }
+            console.log("the query is defined as the", query);
             const users= await User.find(query).select("-passwordHash").sort({createdAt: -1}).limit(parseInt(limit)).skip(parseInt((page)-1)*parseInt(limit));
+            console.log("users are defined as the", users);
             const total= await User.countDocuments(query);
 
             return res.status(200).json({

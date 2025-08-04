@@ -118,7 +118,7 @@ class AuthController{
                 });
             }
             catch(err){
-                return res.status(500).json({"message": "Login Failed"});
+                return res.status(500).json({"message": "Login Failed", "error": err});
             }
         }
         

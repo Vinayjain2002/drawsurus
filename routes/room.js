@@ -16,15 +16,15 @@ router.post('/join/:roomCode', roomController.joinRoom);
 router.get('/:roomId', requireSameEnterprise, roomController.getRoom);
 
 // // Leave room
-// router.post('/:roomId/leave', requireSameEnterprise, roomController.leaveRoom);
+router.post('/leave/:roomId', requireSameEnterprise, roomController.leaveRoom);
 
 // // Update room settings
-// router.put('/:roomId/settings', requireSameEnterprise, roomController.updateRoomSettings);
+router.put('/settings/:roomId', requireSameEnterprise, roomController.updateRoomSettings);
 
 // // Get active rooms for enterprise
-// router.get('/', roomController.getActiveRooms);
+router.get('/', roomController.getActiveRooms);
 
 // // Start game
-// router.post('/:roomId/start-game', requireSameEnterprise, roomController.startGame);
+router.post('/startgame/:roomId', requireSameEnterprise, roomController.startGame);
 
 module.exports = router;
