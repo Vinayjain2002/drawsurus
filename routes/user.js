@@ -6,24 +6,26 @@ const { authenticateToken, requireSameEnterprise } = require('../middleware/auth
 router.use(authenticateToken);
 
 // Get user by ID
-router.get('/:userId', requireSameEnterprise, userController.getUserById);
 
 // Get user stats
-router.get('/:userId/stats', requireSameEnterprise, userController.getUserStats);
+// router.get('/:userId/stats', requireSameEnterprise, userController.getUserStats);
 
 // Get online users for enterprise
 router.get('/online', userController.getOnlineUsers);
 
 // Search users
-router.get('/search', userController.searchUsers);
+// router.get('/search', userController.searchUsers);
 
 // Update online status
-router.put('/online-status', userController.updateOnlineStatus);
+// router.put('/onlineStatus', userController.updateOnlineStatus);
 
-// Get current room
-router.get('/current-room', userController.getCurrentRoom);
+// // Get current room
+// router.get('/current-room', userController.getCurrentRoom);
 
-// Leave current room
-router.post('/leave-room', userController.leaveRoom);
+// // Leave current room
+// router.post('/leave-room', userController.leaveRoom);
+
+
+router.get('/:userId', requireSameEnterprise, userController.getUserById);
 
 module.exports = router;

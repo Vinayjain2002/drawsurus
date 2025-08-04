@@ -98,8 +98,8 @@ const requireSameEnterprise = (req, res, next) => {
       message: 'Authentication required'
     });
   }
-
   const targetEnterpriseTag = req.params.enterpriseTag || req.body.enterpriseTag;
+
   if (targetEnterpriseTag && req.user.enterpriseTag !== targetEnterpriseTag) {
     return res.status(403).json({
       successs: false,
@@ -110,6 +110,7 @@ const requireSameEnterprise = (req, res, next) => {
 
   next();
 };
+
 
 // Rate limiting for authentication attempts
 const authRateLimit = {

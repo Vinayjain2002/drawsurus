@@ -7,9 +7,11 @@ class GameController{
     async getGame(req, res){
         try{
             const {gameId}= req.params;
+            console.log("game id is defined as the", gameId);
             const game= await Game.findById(gameId).populate("roomId", 'roomCode players')
             .populate("rounds.drawerId", "userName avatar")
             .populate("rounds.correctGuesses.userId", "userName avatar");
+            console.log("game data ", game);
             
             if(!game){
                 return res.status(404).json({
@@ -76,15 +78,85 @@ class GameController{
                 const {gameId}= req.params;
                 const {guess}= req.body;
 
+                if (!guess || typeof guess !== 'string') {
+                    return res.status(400).json({"message": "Valid guess is required", success: false});
+                }
+
                 const game= await Game.findById(gameId);
                 if(!game){
                     return res.status(404).json({"message": "Game not found", success: false});
                 }
 
-                // TODO: Implement guess submission logic
-                return res.status(200).json({"message": "Guess submitted successfully", success: true});
+                // Check if game is active
+                if (game.status !== 'playing') {
+                    return res.status(400).json({"message": "Game is not active", success: false});
+                }
+
+                // Get current round
+                const currentRound = game.getCurrentRound();
+                if (!currentRound) {
+                    return res.status(400).json({"message": "No active round found", success: false});
+                }
+
+                // Check if round has ended
+                if (currentRound.endTime) {
+                    return res.status(400).json({"message": "Round has already ended", success: false});
+                }
+
+                // Check if user is not the drawer
+                if (currentRound.drawerId.toString() === req.user._id.toString()) {
+                    return res.status(400).json({"message": "Drawer cannot submit guesses", success: false});
+                }
+
+                // Check if user has already guessed correctly
+                const hasAlreadyGuessed = currentRound.correctGuesses.some(
+                    correctGuess => correctGuess.userId.toString() === req.user._id.toString()
+                );
+
+                if (hasAlreadyGuessed) {
+                    return res.status(400).json({"message": "You have already guessed correctly", success: false});
+                }
+
+                // Validate guess against current word
+                const normalizedGuess = guess.toLowerCase().trim();
+                const normalizedWord = currentRound.word.toLowerCase().trim();
+
+                if (normalizedGuess === normalizedWord) {
+                    // Calculate time taken and points
+                    const timeTaken = Math.floor((new Date() - currentRound.startTime) / 1000);
+                    const points = Math.max(100 - Math.floor(timeTaken / 10), 10);
+
+                    // Add correct guess to the round
+                    await game.addCorrectGuess(req.user._id, req.user.userName, points, timeTaken);
+
+                    // Add message to the round
+                    await game.addMessage(req.user._id, req.user.userName, guess, 'guess');
+
+                    return res.status(200).json({
+                        "message": "Correct guess!", 
+                        success: true,
+                        data: {
+                            isCorrect: true,
+                            points: points,
+                            timeTaken: timeTaken,
+                            word: currentRound.word
+                        }
+                    });
+                } else {
+                    // Add incorrect guess as a message
+                    await game.addMessage(req.user._id, req.user.userName, guess, 'guess');
+
+                    return res.status(200).json({
+                        "message": "Incorrect guess", 
+                        success: true,
+                        data: {
+                            isCorrect: false
+                        }
+                    });
+                }
             }
             catch(err){
+                console.error('Submit guess error:', err);
                 return res.status(500).json({"message": "Failed to submit guess", success: false});
             }
         }

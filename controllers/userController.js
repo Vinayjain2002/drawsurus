@@ -1,13 +1,12 @@
 const User = require('../models/User');
 const UserStats = require('../models/UserStats');
-const winston = require('winston');
 
 class UserController {
   // Get user by ID
   async getUserById(req, res) {
     try {
       const { userId } = req.params;
-      
+      console.log("user id is defined as", userId);
       const user = await User.findById(userId).select('-passwordHash');
       if (!user) {
         return res.status(404).json({
@@ -22,7 +21,6 @@ class UserController {
       });
 
     } catch (error) {
-      winston.error('Get user error:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to get user'
@@ -60,10 +58,12 @@ class UserController {
     try {
       const { enterpriseTag } = req.user;
       
+      console.log("enterprise tag is defined as ", enterpriseTag);
       const onlineUsers = await User.find({
         enterpriseTag,
         isOnline: true
       }).select('userName avatar lastOnline');
+      console.log("the count of the active users is defined as the", onlineUsers.length);
 
       res.status(200).json({
         success: true,
@@ -111,7 +111,7 @@ class UserController {
   async updateOnlineStatus(req, res) {
     try {
       const { isOnline } = req.body;
-      
+      console.log("the user details are defined as the", req.user);
       req.user.isOnline = isOnline;
       req.user.lastOnline = new Date();
       await req.user.save();
@@ -122,7 +122,6 @@ class UserController {
       });
 
     } catch (error) {
-      winston.error('Update online status error:', error);
       res.status(500).json({
         success: false,
         message: 'Failed to update online status'
