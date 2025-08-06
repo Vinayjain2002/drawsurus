@@ -12,8 +12,13 @@ class AuthController{
         try{
             console.log("registering user");
             const {error}= validateRegistration(req.body);
+            console.log("the creds are defined as ");
             if(error){
+<<<<<<< HEAD
                 console.log("Validation error", error.details[0].message);
+=======
+                console.log(error);
+>>>>>>> 9226a100f78f2e9868020422cc037b65d4ee70b2
                 return res.status(400).json({
                     success: false,
                     message: error.details[0].message
@@ -176,7 +181,10 @@ class AuthController{
 
         async getProfile(req,res){
             try{
+                console.log("get request is called");
+
                 const userResponse= req.user.toObject();
+                console.log(userResponse);
                 delete userResponse.passwordHash;
 
                 res.status(200).json({success: true,data: {
