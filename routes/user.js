@@ -20,10 +20,10 @@ router.get('/online', userController.getOnlineUsers);
 // router.put('/onlineStatus', userController.updateOnlineStatus);
 
 // // Get current room
-// router.get('/current-room', userController.getCurrentRoom);
+router.get('/currentRoom', userController.getCurrentRoom);
 
 // // Leave current room
-// router.post('/leave-room', userController.leaveRoom);
+// router.get('/leaveroom', userController.leaveRoom);
 
 
 router.get('/:userId', requireSameEnterprise, userController.getUserById);

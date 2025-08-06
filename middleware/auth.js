@@ -1,14 +1,13 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Session = require('../models/Session');
-const winston = require('winston');
 
 // Verify JWT token middleware
 const authenticateToken = async (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
-
+    console.log("the token is defined as the", token);
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -25,7 +24,8 @@ const authenticateToken = async (req, res, next) => {
         success: false,
         message: 'User not found'
       });
-    }
+    } 
+    console.log("the data of the users is identified", user);
 
     // Check if session is valid
     // const session = await Session.findBySessionId(decoded.sessionId);
@@ -46,8 +46,7 @@ const authenticateToken = async (req, res, next) => {
 
     next();
   } catch (error) {
-    winston.error('Authentication error:', error);
-    
+    console.log("Error occured during the authentication", error);    
     if (error.name === 'JsonWebTokenError') {
       return res.status(401).json({
         success: false,

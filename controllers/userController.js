@@ -132,6 +132,9 @@ class UserController {
   // Get user's current room
   async getCurrentRoom(req, res) {
     try {
+      console.log("getting the details of the current room");
+      console.log("and the user id is defined as the", req.user._id);
+      
       const user = await User.findById(req.user._id)
         .populate('currentRoomId')
         .select('currentRoomId');
@@ -153,6 +156,7 @@ class UserController {
   // Leave current room
   async leaveRoom(req, res) {
     try {
+      console.log("the data of the user is defined as the", req.user);
       req.user.currentRoomId = null;
       await req.user.save();
 
