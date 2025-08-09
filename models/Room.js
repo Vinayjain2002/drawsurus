@@ -1,3 +1,4 @@
+const { number } = require('joi');
 const mongoose = require('mongoose');
 
 const roomSchema = new mongoose.Schema({
@@ -31,9 +32,17 @@ const roomSchema = new mongoose.Schema({
       type: Boolean,
       default: false
     },
-    isOnline: {
+    isReady: {
       type: Boolean,
       default: true
+    },
+    avatar: {
+      type: String,
+      default: null
+    },
+    isDrawing: {
+      type: Boolean,
+      default: false
     },
     joinedAt: {
       type: Date,

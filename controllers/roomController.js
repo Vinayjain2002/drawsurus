@@ -46,7 +46,7 @@ class RoomController {
       res.status(201).json({
         success: true,
         message: 'Room created successfully',
-        data: { room: populatedRoom }
+        data: populatedRoom
       });
 
     } catch (error) {
@@ -54,7 +54,8 @@ class RoomController {
       res.status(500).json({
         success: false,
         message: 'Failed to create room',
-        error: error
+        error: error,
+        data: null
       });
     }
   }
@@ -69,7 +70,8 @@ class RoomController {
       if (!room) {
         return res.status(404).json({
           success: false,
-          message: 'Room not found'
+          message: 'Room not found',
+          data: null
         });
       }
 
@@ -77,7 +79,8 @@ class RoomController {
       if (room.enterpriseTag !== enterpriseTag) {
         return res.status(403).json({
           success: false,
-          message: 'Access denied: Different enterprise'
+          message: 'Access denied: Different enterprise',
+          data: null
         });
       }
 
@@ -85,7 +88,8 @@ class RoomController {
       if (room.isFull()) {
         return res.status(400).json({
           success: false,
-          message: 'Room is full'
+          message: 'Room is full',
+          data: null
         });
       }
 
@@ -93,7 +97,8 @@ class RoomController {
       if (room.status === 'playing') {
         return res.status(400).json({
           success: false,
-          message: 'Game is already in progress'
+          message: 'Game is already in progress',
+          data: null
         });
       }
 
@@ -112,14 +117,15 @@ class RoomController {
       res.status(200).json({
         success: true,
         message: 'Joined room successfully',
-        data: { room: populatedRoom }
+        data: populatedRoom
       });
 
     } catch (error) {
       winston.error('Join room error:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to join room'
+        message: 'Failed to join room',
+        data: null
       });
     }
   }
@@ -137,7 +143,8 @@ class RoomController {
       if (!room) {
         return res.status(404).json({
           success: false,
-          message: 'Room not found'
+          message: 'Room not found',
+          data: null
         });
       }
 
@@ -145,20 +152,23 @@ class RoomController {
       if (room.enterpriseTag !== req.user.enterpriseTag) {
         return res.status(403).json({
           success: false,
-          message: 'Access denied: Different enterprise'
+          message: 'Access denied: Different enterprise',
+          data: null
         });
       }
 
       res.status(200).json({
         success: true,
-        data: { room }
+        message: 'Room details retrieved successfully',
+        data: room
       });
 
     } catch (error) {
       winston.error('Get room error:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to get room'
+        message: 'Failed to get room',
+        data: null
       });
     }
   }
@@ -220,7 +230,8 @@ class RoomController {
       if (!room) {
         return res.status(404).json({
           success: false,
-          message: 'Room not found'
+          message: 'Room not found',
+          data: null
         });
       }
 
@@ -228,7 +239,8 @@ class RoomController {
       if (room.hostId.toString() !== req.user._id.toString()) {
         return res.status(403).json({
           success: false,
-          message: 'Only host can update room settings'
+          message: 'Only host can update room settings',
+          data: null
         });
       }
 
@@ -239,14 +251,15 @@ class RoomController {
       res.status(200).json({
         success: true,
         message: 'Room settings updated',
-        data: { room }
+        data: room
       });
 
     } catch (error) {
       winston.error('Update room settings error:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to update room settings'
+        message: 'Failed to update room settings',
+        data: null
       });
     }
   }
@@ -259,15 +272,17 @@ class RoomController {
       const rooms = await Room.findActiveByEnterprise(enterpriseTag);
 
       res.status(200).json({
+        message: "Active rooms retrieved successfully",
         success: true,
-        data: { rooms }
+        data: rooms 
       });
 
     } catch (error) {
       winston.error('Get active rooms error:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to get active rooms'
+        message: 'Failed to get active rooms',
+        data: null
       });
     }
   }

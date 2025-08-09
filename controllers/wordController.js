@@ -9,6 +9,7 @@ dotenv.config();
 class WordController{
     async createWord(req,res){
         try{
+<<<<<<< HEAD
             console.log("Error for creation of word")
             const {error}= validateWord(req.body);
             if(!error){
@@ -44,6 +45,16 @@ class WordController{
                 message: "Word Created Successfully",
                 data: wordCreationResponse
             });
+=======
+            console.log("Calling create Word Mehod");
+            const {error}= validateWord(req.body);
+            if(error){
+                return res.status(400).json({
+                    success: false,
+                    message: error.details[0].message
+                });
+            }    
+>>>>>>> Resolved Api issues
         }
         catch(err){
             return res.status(500).json({

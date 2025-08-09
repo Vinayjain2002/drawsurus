@@ -22,7 +22,7 @@ class GameController{
             if(game.enterpriseTag !== req.user.enterpriseTag){
                 return res.status(403).json({"messsage": "Access denied: Different enterprise", success: false});
             }
-            return res.status(200).json({"message": "Data fetched Successfully", success: true, data: {game}});
+            return res.status(200).json({"message": "Data fetched Successfully", success: true, data: game});
         }
         catch(err){
             return res.status(500).json({"message": "Failed to get game", success: false});
@@ -161,6 +161,11 @@ class GameController{
             }
         }
 
+        async createGame(req,res){
+
+        }
+
+        
         async endRound(req,res){
             try{
                 const {gameId}= req.params;

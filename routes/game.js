@@ -16,7 +16,7 @@ router.get('/:gameId', requireSameEnterprise, gameController.getGame);
 // router.post('/drawing/:gameId', requireSameEnterprise, gameController.submitDrawing);
 
 // // Submit guess
-// router.post('/:gameId/guess', requireSameEnterprise, gameController.submitGuess);
+// router.post('/guess/:gameId', requireSameEnterprise, gameController.submitGuess);
 
 // // End current round
 // router.post('/:gameId/end-round', requireSameEnterprise, gameController.endRound);
@@ -24,4 +24,5 @@ router.get('/:gameId', requireSameEnterprise, gameController.getGame);
 // // Get game history
 // router.get('/history', gameController.getGameHistory);
 
+router.post("create",gameController.createGame);
 module.exports = router;

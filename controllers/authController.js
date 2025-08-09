@@ -14,14 +14,10 @@ class AuthController{
             const {error}= validateRegistration(req.body);
             console.log("the creds are defined as ");
             if(error){
-<<<<<<< HEAD
-                console.log("Validation error", error.details[0].message);
-=======
-                console.log(error);
->>>>>>> 9226a100f78f2e9868020422cc037b65d4ee70b2
                 return res.status(400).json({
                     success: false,
-                    message: error.details[0].message
+                    message: error.details[0].message,
+                    data: null
                 });
             }
 
@@ -33,7 +29,8 @@ class AuthController{
             if(existingUser){
                 return res.status(409).json({
                     success: false,
-                    message: "User already exists"
+                    message: "User already exists",
+                    data: null
                 });
             }
 
@@ -90,7 +87,8 @@ class AuthController{
                 if(error){
                     return res.status(400).json({
                         success: false,
-                        message: error.details[0].message
+                        message: error.details[0].message,
+                        data: null
                     });
                 }
                 console.log("User Login Creds Verified");
@@ -98,13 +96,13 @@ class AuthController{
                 const user= await User.findOne({email});
                 console.log("email and password",email, password);
                 if(!user){
-                    return res.status(401).json({"message": "Invalid Credentials"});
+                    return res.status(401).json({"message": "Invalid Credentials", "success":false, data: null});
                 }
                 console.log("the token is defined as the", user._id);
                 const isValidPassword= user.comparePassword(password);
                 console.log("password validation", isValidPassword);
                 if(!isValidPassword){
-                    return res.status(401).json({"success": false, message: "Invalid Credentials"});
+                    return res.status(401).json({"success": false, message: "Invalid Credentials", data: null});
                 }
                 //creating the user token
                 const token= jwt.sign(
@@ -121,11 +119,12 @@ class AuthController{
                     message: "Login Successfully",
                     data: {
                         user: userResponse,
-                        token                    }
+                        token          
+                  }
                 });
             }
             catch(err){
-                return res.status(500).json({"message": "Login Failed", "error": err});
+                return res.status(500).json({"message": "Login Failed", "error": err, success: false});
             }
         }
         
@@ -170,12 +169,10 @@ class AuthController{
                     {expiresIn: '24h'}
                 );
 
-                return res.status(200).json({success: true, message: "Token Refreshed Successfully", data: {
-                    token
-                }});
+                return res.status(200).json({success: true, message: "Token Refreshed Successfully", data: token});
             }
             catch(err){
-                return res.status(500).json({"message": "Token refresh failed", success: false});
+                return res.status(500).json({"message": "Token refresh failed", success: false, data: null});
             }
         }
 
@@ -187,12 +184,10 @@ class AuthController{
                 console.log(userResponse);
                 delete userResponse.passwordHash;
 
-                res.status(200).json({success: true,data: {
-                    user: userResponse
-                }});
+                res.status(200).json({success: true,data: userResponse});
             }
             catch(err){
-                res.status(500).json({"message": "Failed to get profile", success: false});
+                res.status(500).json({"message": "Failed to get profile", success: false, data: null});
             }
         }
 
@@ -218,13 +213,11 @@ class AuthController{
                         {new: true, runValidators: true}
                     ).select("-passwordHash");
 
-                    return res.status(200).json({"message": "Profile Updated Successfully", data: {
-                        user: updatedUser
-                    }});
+                    return res.status(200).json({success: true,"message": "Profile Updated Successfully", data: userResponse});
                 }
             }
             catch(err){
-                return res.status(500).json({"message": "Profile Updated Failed", success: false});
+                return res.status(500).json({"message": "Profile Updated Failed", success: false, data: null});
             }
         }
 }
