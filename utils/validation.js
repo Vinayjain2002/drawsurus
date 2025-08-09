@@ -65,6 +65,46 @@ const validateLogin = (data) => {
   return schema.validate(data);
 };
 
+
+const validateWord = (data) => {
+  const schema = Joi.object({
+    word: Joi.string()
+      .min(3)
+      .max(30)
+      .pattern(/^[a-zA-Z0-9\s_-]+$/)
+      .required()
+      .messages({
+        'string.min': 'Word must be at least 3 characters',
+        'string.max': 'Word cannot exceed 30 characters',
+        'string.pattern.base': 'Word can only contain letters, numbers, spaces, hyphens, and underscores',
+        'any.required': 'Word is mandatory'
+      }),
+    category: Joi.string()
+      .optional()
+      .messages({
+        'string.base': 'Category must be a string'
+      }),
+    difficulty: Joi.string()
+      .valid('easy', 'medium', 'hard')
+      .insensitive() // to accept EASY, Easy, easy etc.
+      .default('medium')
+      .messages({
+        'any.only': 'Difficulty must be one of easy, medium, or hard'
+      }),
+    isActive: Joi.boolean()
+      .default(true)
+      .messages({
+        'boolean.base': 'isActive must be a boolean'
+      }),
+    createdAt: Joi.date()
+      .optional(),
+    updatedAt: Joi.date()
+      .optional()
+  });
+
+  return schema.validate(data);
+};
+
 // Common validation rules
 const commonValidations = {
   // User validations
@@ -372,6 +412,7 @@ module.exports = {
   validateLogin,
   commonValidations,
   validationChains,
+  validateWord,
   customValidations,
   handleValidationErrors,
   sanitizeInput
