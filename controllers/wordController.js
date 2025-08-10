@@ -9,14 +9,14 @@ dotenv.config();
 class WordController{
     async createWord(req,res){
         try{
-<<<<<<< HEAD
             console.log("Error for creation of word")
             const {error}= validateWord(req.body);
             if(!error){
                 console.log(error);
                 return res.status(400).json({
                     success: false,
-                    messsage: error.details[0].messsage
+                    messsage: error.details[0].messsage,
+                    data: null
                 });
             }
             const {word, category, difficulty, isActive, createdAt, updatedAt}= req.body;
@@ -25,6 +25,7 @@ class WordController{
             if(existingWord){
                 return res.status(409).json({
                     success: false,
+                    data: null,
                     message: "Word Already Exists"
                 });
             }
@@ -45,21 +46,13 @@ class WordController{
                 message: "Word Created Successfully",
                 data: wordCreationResponse
             });
-=======
-            console.log("Calling create Word Mehod");
-            const {error}= validateWord(req.body);
-            if(error){
-                return res.status(400).json({
-                    success: false,
-                    message: error.details[0].message
-                });
-            }    
->>>>>>> Resolved Api issues
+
         }
         catch(err){
             return res.status(500).json({
                 success: false,
-                message: "Word Created Successfully"
+                message: "Word Created Successfully",
+                data: null
             });
         }
     }
@@ -72,7 +65,8 @@ class WordController{
                 console.log(error);
                 return res.status(400).json({
                     success: false,
-                    message: error.details[0].message
+                    message: error.details[0].message,
+                    data: null
                 });
             }
             const {category, difficulty}= req.body;
@@ -83,13 +77,15 @@ class WordController{
            
             return res.status(200).json({
                 "message": "Words get successfully",
-                "word": existingWord
+                data: existingWord,
+                success: true
             });
         }
         catch(err){
             return res.status(500).json({
                 success: false,
-                message: "Error finding suitable words"
+                error: "Error finding suitable words",
+                data: null
             });
         }
     }
@@ -138,7 +134,8 @@ class WordController{
             if(error){
                 return res.status(409).json({
                     "message": error.details[0].message,
-                    success: false
+                    success: false,
+                    data: null
                 });
             }
 
@@ -153,7 +150,8 @@ class WordController{
         catch(err){
             return res.status(500).json({
                 message: "Internal Server Error",
-                success: false
+                success: false,
+                data: null
             })
         }
     }   

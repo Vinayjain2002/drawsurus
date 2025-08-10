@@ -15,6 +15,7 @@ const authRoutes= require("./routes/auth");
 const gameRoutes= require("./routes/game")
 const roomRoutes= require("./routes/room")
 const userRoutes= require("./routes/user")
+const wordRoutes= require("./routes/Words");
 
 dotenv.config();
 
@@ -54,6 +55,7 @@ app.use(speedLimiter);
 app.use("/admin", adminRoutes);
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/word", wordRoutes);
 app.use("/game", gameRoutes);
 app.use("/room", roomRoutes);
 app.get("/health", (req,res)=>{
