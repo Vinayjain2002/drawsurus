@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 const { authenticateToken, requireSameEnterprise } = require('../middleware/auth');
+const { Route53RecoveryCluster } = require('aws-sdk');
 
 router.use(authenticateToken);
 
 // Get user by ID
-
+router.get("/:userId", userController.getUserById);
 // Get user stats
-// router.get('/:userId/stats', requireSameEnterprise, userController.getUserStats);
+// router.get('/stats/:userId', requireSameEnterprise, userController.getUserStats);
 
 // Get online users for enterprise
 router.get('/online', userController.getOnlineUsers);

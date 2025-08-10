@@ -11,19 +11,22 @@ class UserController {
       if (!user) {
         return res.status(404).json({
           success: false,
-          message: 'User not found'
+          message: 'User not found',
+          data: null
         });
       }
 
       res.status(200).json({
+        message: 'User retrieved successfully',
         success: true,
-        data: { user }
+        data: user
       });
 
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: 'Failed to get user'
+        message: error.message || 'Failed to get user',
+        data: null
       });
     }
   }
@@ -41,14 +44,15 @@ class UserController {
 
       res.status(200).json({
         success: true,
-        data: { stats }
+        data: stats,
+        message: "Data retrieved successfully"
       });
 
     } catch (error) {
-      winston.error('Get user stats error:', error);
       res.status(500).json({
         success: false,
-        message: 'Failed to get user stats'
+        message: 'Failed to get user stats',
+        data: null
       });
     }
   }
@@ -82,11 +86,11 @@ class UserController {
   // Search users by username
   async searchUsers(req, res) {
     try {
-      const { q, enterpriseTag } = req.query;
+      const { userName, enterpriseTag } = req.query;
       const searchQuery = { enterpriseTag: enterpriseTag || req.user.enterpriseTag };
 
-      if (q) {
-        searchQuery.userName = { $regex: q, $options: 'i' };
+      if (userName) {
+        searchQuery.userName = { $regex: userName, $options: 'i' };
       }
 
       const users = await User.find(searchQuery)
@@ -118,12 +122,14 @@ class UserController {
 
       res.status(200).json({
         success: true,
-        message: 'Online status updated'
+        message: 'Online status updated',
+        data: req.user
       });
 
     } catch (error) {
       res.status(500).json({
         success: false,
+        data: null,
         message: 'Failed to update online status'
       });
     }
@@ -141,7 +147,7 @@ class UserController {
 
       res.status(200).json({
         success: true,
-        data: { room: user.currentRoomId }
+        data: room
       });
 
     } catch (error) {

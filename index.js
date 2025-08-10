@@ -16,6 +16,7 @@ const gameRoutes= require("./routes/game")
 const roomRoutes= require("./routes/room")
 const userRoutes= require("./routes/user")
 const wordRoutes= require("./routes/Words");
+const guestRoutes= require("./routes/guest");
 
 dotenv.config();
 
@@ -57,6 +58,7 @@ app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/word", wordRoutes);
 app.use("/game", gameRoutes);
+app.use("/guest", guestRoutes);
 app.use("/room", roomRoutes);
 app.get("/health", (req,res)=>{
     res.status(200).json({status: "ok"});

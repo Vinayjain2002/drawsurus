@@ -162,7 +162,37 @@ class GameController{
         }
 
         async createGame(req,res){
+            try{
+                const {roomId, wordDifficulty, settings}= req.body;
+                if(!roomId){
+                    return res.status(400).json({"message": "Room ID is required", success: false});
+                }
 
+                const room= await Room.findById(roomId);
+                if(!room){
+                    return res.status(404).json({"message": "Room not found", success: false});
+                }
+
+                if(room.enterpriseTag !== req.user.enterpriseTag){
+                    return res.status(403).json({"message": "Access denied: Different enterprise", success: false});
+                }
+
+                // Create new game
+                const game= new Game({
+                    roomId: room._id,
+                    rounds: [],
+                    status: 'waiting',
+                    settings: settings || {},
+                    finalScores: [],
+                    enterpriseTag: req.user.enterpriseTag
+                });
+                await game.save();
+
+                return res.status(201).json({"message": "Game created successfully", success: true, data: game});
+            }
+            catch(err){
+                return res.status(500).json({"message": "Failed to create game", success: false});
+            }
         }
 
         

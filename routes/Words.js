@@ -13,3 +13,5 @@ router.get("/difficulty", wordController.getWordsOnDifficulty);
 
 //for getting today created words
 router.get("/todayCreated", wordController.getTodayCreatedWords);
+
+module.exports= router;

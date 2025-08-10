@@ -24,5 +24,5 @@ router.get('/:gameId', requireSameEnterprise, gameController.getGame);
 // // Get game history
 // router.get('/history', gameController.getGameHistory);
 
-router.post("create",gameController.createGame);
+router.post("/",gameController.createGame);
 module.exports = router;
