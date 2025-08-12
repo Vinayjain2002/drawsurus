@@ -23,7 +23,7 @@ class AuthController{
 
             const {userName, email, password, enterpriseTag}= req.body;
             console.log(userName, email,password, enterpriseTag );
-            const existingUser = await User.findOne({
+                const existingUser = await User.findOne({
                 $and: [
                     { $or: [{ email: email }, { userName: userName }] },
                     ...(enterpriseTag ? [{ enterpriseTag: enterpriseTag }] : [])
