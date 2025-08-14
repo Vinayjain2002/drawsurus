@@ -182,7 +182,6 @@ class AuthController{
 
         async getProfile(req,res){
             try{
-                console.log("get request is called");
 
                 const userResponse= req.user.toObject();
                 console.log(userResponse);
