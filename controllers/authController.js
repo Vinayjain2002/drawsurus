@@ -14,6 +14,7 @@ class AuthController{
             const {error}= validateRegistration(req.body);
             console.log("the creds are defined as ");
             if(error){
+                console.log("the error is defined as the", error);
                 return res.status(400).json({
                     success: false,
                     message: error.details[0].message,
@@ -78,6 +79,7 @@ class AuthController{
               });
         }
         catch(err){
+            console.log(err);
             return res.status(500).json({
                 success: false,
                 message: "Registeration Failed"
