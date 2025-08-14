@@ -25,6 +25,7 @@ connectDB();
 const app= express();
 const server= http.createServer(app);
 
+app.set('trust proxy', true);
 // using the middlewares
 app.use(cors());
 app.use(helmet());
