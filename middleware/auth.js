@@ -1,10 +1,14 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Session = require('../models/Session');
+const dotenv= require('dotenv')
+dotenv.config();
+
 
 // Verify JWT token middleware
 const authenticateToken = async (req, res, next) => {
   try {
+    console.log('the secret key is defined as the ', process.env.JWT_SECRET);
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
     console.log("the token is defined as the", token);

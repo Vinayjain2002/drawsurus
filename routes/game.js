@@ -9,6 +9,7 @@ router.use(authenticateToken);
 // Get game details
 router.get('/:gameId', requireSameEnterprise, gameController.getGame);
 
+router.post("/update/round/:gameId", requireSameEnterprise, gameController.updateRoomSettings);
 // Get current round
 // router.get('/currentRound/:gameId', requireSameEnterprise, gameController.getCurrentRound);
 

@@ -49,6 +49,43 @@ class GameController{
                 return res.status(500).json({success: false,"message": "Failed to get current Round"});
             }
         }
+
+        async updateRoomSettings(req,res){
+            try{
+             
+                const {gameId}= req.params;
+                const {roundDetails}= req.body;
+                  console.log("game id is defined as the", gameId);
+                console.log(roundDetails);
+                if(!gameId || !roundDetails){
+                    return res.status(404).json({"message": "Game Details not identified", success: false});
+                }
+                const gameDetails= await Game.findById(gameId);
+                  if(!gameDetails){
+                    return res.status(404).json({"message": "Game not found", success: false});
+                }
+                if(gameDetails.rounds.length >= gameDetails.settings.roundsPerGame){
+                    return res.status(400).json({"message": "Can not create a new Round", success: false});
+                }
+
+               const updatedGameDetails = await Game.findByIdAndUpdate(
+                        gameId, // <-- The _id value of the game
+                        {
+                            $set: {
+                                rounds: [...gameDetails.rounds, roundDetails]
+                            }
+                        },
+                        { new: true } // Return the updated document
+                    );
+
+                return res.status(200).json({"message": "Game Details updated Successfully", success: true, data: updatedGameDetails});
+
+            }
+            catch(err){
+                console.log("the error is defined as the", err);
+                return res.status(500).json({"message": "Failed to update Round Details", success: false})
+            }
+        }
     
         async submitDrawing(req,res){
             try{
