@@ -9,10 +9,9 @@ dotenv.config();
 class WordController{
     async createWord(req,res){
         try{
-            console.log("Error for creation of word")
             const {error}= validateWord(req.body);
-            if(!error){
-                console.log(error);
+            if(error){
+                console.log("error in the word creation is defined as ");
                 return res.status(400).json({
                     success: false,
                     messsage: error.details[0].messsage,
@@ -33,9 +32,7 @@ class WordController{
                 word: word,
                 isActive: isActive,
                 category: category,
-                difficulty: difficulty,
-                updatedAt: Date.now,
-                createdAt: Date.now
+                difficulty: difficulty
             });
             await newWord.save();
             console.log("Word Created Successfully");
@@ -49,6 +46,7 @@ class WordController{
 
         }
         catch(err){
+            console.log(err);
             return res.status(500).json({
                 success: false,
                 message: "Word Created Successfully",
