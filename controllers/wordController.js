@@ -55,6 +55,81 @@ class WordController{
         }
     }
 
+    async createMultipleWords(req, res) {
+        try {
+            const wordsArray = req.body.words; // Expecting { words: [{word, category, difficulty, isActive}, ...] }
+
+            if (!Array.isArray(wordsArray) || wordsArray.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Request must contain a non-empty 'words' array",
+                data: null
+            });
+            }
+
+            const validWords = [];
+            const errors = [];
+
+            for (const [index, wordData] of wordsArray.entries()) {
+            const { error } = validateWord(wordData);
+
+            if (error) {
+                errors.push({
+                index,
+                word: wordData.word,
+                message: error.details[0].message
+                });
+                continue;
+            }
+
+            // Check for existing word
+            const existingWord = await Word.findOne({ word: wordData.word });
+            if (existingWord) {
+                errors.push({
+                index,
+                word: wordData.word,
+                message: "Word already exists"
+                });
+                continue;
+            }
+
+            // Prepare word for insertion
+            validWords.push({
+                word: wordData.word,
+                category: wordData.category,
+                difficulty: wordData.difficulty,
+                isActive: wordData.isActive
+            });
+            }
+
+            if (validWords.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "No valid words to insert",
+                errors
+            });
+            }
+
+            // Insert valid words
+            const insertedWords = await Word.insertMany(validWords);
+
+            return res.status(201).json({
+            success: true,
+            message: `${insertedWords.length} word(s) created successfully`,
+            data: insertedWords,
+            errors: errors.length ? errors : null
+            });
+
+        } catch (err) {
+            console.error("Error creating multiple words:", err);
+            return res.status(500).json({
+            success: false,
+            message: "Server error while creating multiple words",
+            data: null
+            });
+        }
+   }
+
     async getWord(req,res){
         try{
             const {error}= validateWord(req.body);

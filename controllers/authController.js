@@ -11,7 +11,7 @@ class AuthController{
     async register(req,res){
         try{
             console.log("registering user");
-            const {error}= validateRegistration(req.body);
+            const {error}= validateRegistration(req.boy);
             console.log("the creds are defined as ");
             if(error){
                 console.log("the error is defined as the", error);

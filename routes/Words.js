@@ -4,7 +4,7 @@ const wordController= require("../controllers/wordController")
 
 //router for the creation of words
 router.post("/", wordController.createWord);
-
+router.post("/many",wordController.createMultipleWords );
 // router for getting the words on the basis of category and difficulty
 router.get("/", wordController.getWord);
 
